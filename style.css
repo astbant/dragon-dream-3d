@@ -1,0 +1,538 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #0a0a1a;
+    color: #e0e0e0;
+    user-select: none;
+}
+
+.screen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #0a0a1a, #1a1a2e);
+    overflow-y: auto;
+}
+
+.screen.active { display: flex; }
+
+/* شاشة التحميل */
+.loader-dragon {
+    font-size: 80px;
+    animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.loading-bar {
+    width: 250px;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+#loading-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e74c3c, #f39c12);
+    width: 0%;
+    transition: width 0.3s;
+}
+
+#loading-text {
+    color: #888;
+    font-size: 14px;
+}
+
+/* شاشة البداية */
+.logo-3d {
+    font-size: 120px;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(231,76,60,0.5));
+}
+
+h1 {
+    font-size: 28px;
+    background: linear-gradient(90deg, #f39c12, #e74c3c, #9b59b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 15px 0;
+    font-weight: 900;
+    text-align: center;
+}
+
+.subtitle {
+    color: #888;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.btn-primary, .btn-secondary {
+    width: 100%;
+    max-width: 280px;
+    padding: 15px;
+    margin: 6px 0;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 4px 15px rgba(231,76,60,0.4);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: #ccc;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-primary:active, .btn-secondary:active {
+    transform: scale(0.96);
+}
+
+/* اختيار العرق */
+.race-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    max-width: 450px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.race-card {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.race-card:active {
+    transform: scale(0.95);
+    border-color: #e74c3c;
+    background: rgba(231,76,60,0.15);
+}
+
+.race-icon { font-size: 42px; margin-bottom: 8px; }
+.race-card h3 { color: #f39c12; margin-bottom: 5px; font-size: 15px; }
+.race-card p { font-size: 12px; color: #aaa; }
+.race-card small { color: #2ecc71; font-size: 10px; }
+
+/* الشاشة 3D */
+#screen-game {
+    padding: 0;
+    justify-content: flex-start;
+    background: #000;
+}
+
+#game-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* HUD */
+.hud-top {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.player-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(243,156,18,0.3);
+    font-size: 12px;
+}
+
+#hud-race { font-size: 24px; }
+#hud-name { font-weight: bold; color: #f39c12; }
+#hud-level { font-size: 10px; color: #aaa; }
+
+.hud-right {
+    background: rgba(0,0,0,0.7);
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    border: 1px solid rgba(243,156,18,0.3);
+}
+
+.hud-bars {
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    right: 10px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    pointer-events: none;
+}
+
+.hud-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.6);
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+.hud-bar label {
+    font-size: 10px;
+    font-weight: bold;
+    color: #aaa;
+    width: 22px;
+}
+
+.bar-bg {
+    flex: 1;
+    height: 8px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-bg.big {
+    height: 14px;
+    border-radius: 7px;
+    margin: 5px 0;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.3s;
+    width: 100%;
+}
+
+.bar-fill.hp { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+.bar-fill.mp { background: linear-gradient(90deg, #3498db, #2980b9); }
+.bar-fill.xp { background: linear-gradient(90deg, #f39c12, #e67e22); }
+
+.hud-bar span {
+    font-size: 10px;
+    color: #aaa;
+    min-width: 55px;
+    text-align: left;
+    direction: ltr;
+}
+
+.island-hud {
+    position: absolute;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    padding: 6px 14px;
+    border-radius: 12px;
+    text-align: center;
+    z-index: 10;
+    font-size: 12px;
+    border: 1px solid rgba(243,156,18,0.3);
+}
+
+#hud-island { color: #f39c12; font-weight: bold; }
+#hud-stars { font-size: 10px; margin-top: 2px; }
+
+/* سجل القتال */
+.combat-log {
+    position: absolute;
+    bottom: 200px;
+    left: 10px;
+    width: 200px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-size: 11px;
+    background: rgba(0,0,0,0.6);
+    padding: 8px;
+    border-radius: 8px;
+    z-index: 10;
+    display: none;
+}
+
+.combat-log.show { display: block; }
+
+.combat-log div {
+    margin-bottom: 4px;
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.log-player { color: #2ecc71; }
+.log-enemy { color: #e74c3c; }
+.log-info { color: #f39c12; }
+.log-crit { color: #ff6b6b; font-weight: bold; }
+
+/* HUD العدو */
+.enemy-hud {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(231,76,60,0.5);
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    z-index: 10;
+}
+
+.enemy-hud.hidden { display: none; }
+
+#enemy-name { font-weight: bold; color: #e74c3c; font-size: 14px; }
+#enemy-stars { font-size: 12px; color: #f39c12; margin: 3px 0; }
+#enemy-hp-text { font-size: 10px; color: #aaa; display: block; margin-top: 3px; }
+
+/* التحكم */
+.controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.joystick-area {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    pointer-events: auto;
+}
+
+.joystick {
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    position: relative;
+    backdrop-filter: blur(5px);
+}
+
+.joystick-knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, #e74c3c, #c0392b);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(231,76,60,0.6);
+}
+
+.action-buttons {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+.action-circle {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: transform 0.1s;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.action-circle:active { transform: scale(0.9); }
+.action-circle.skill { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+.action-circle.heal { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+
+/* القائمة الجانبية */
+.side-menu {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+}
+
+.menu-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    border: 1px solid rgba(243,156,18,0.3);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    backdrop-filter: blur(5px);
+}
+
+.menu-btn:active {
+    transform: scale(0.9);
+    background: rgba(231,76,60,0.3);
+}
+
+/* اللوحة المنبثقة */
+.panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.panel.hidden { display: none; }
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.panel-header h3 {
+    color: #f39c12;
+    font-size: 18px;
+}
+
+.close-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(231,76,60,0.3);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.panel-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.list-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.list-item:active {
+    transform: scale(0.98);
+    background: rgba(231,76,60,0.1);
+}
+
+.list-item.equipped {
+    border-color: #2ecc71;
+    background: rgba(46,204,113,0.1);
+}
+
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.item-name { font-weight: bold; color: #f39c12; font-size: 14px; }
+.item-stars { color: #f39c12; font-size: 12px; }
+.item-desc { font-size: 11px; color: #aaa; margin-bottom: 5px; }
+.item-stats {
+    font-size: 10px;
+    color: #2ecc71;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* إشعار */
+.toast {
+    position: fixed;
+    bottom: 220px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(52,152,219,0.95);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    transition: transform 0.3s;
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    pointer-events: none;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: rgba(46,204,113,0.95); }
+.toast.error { background: rgba(231,76,60,0.95); }
+
+/* Responsive */
+@media (max-width: 400px) {
+    .joystick { width: 100px; height: 100px; }
+    .joystick-knob { width: 42px; height: 42px; }
+    .action-circle { width: 55px; height: 55px; font-size: 22px; }
+    .menu-btn { width: 40px; height: 40px; font-size: 18px; }
+}

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a1a">
+    <title>🐉 Dragon Dream World 3D</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- شاشة التحميل -->
+<div id="loading" class="screen active">
+    <div class="loader-dragon">🐉</div>
+    <h1>Dragon Dream World</h1>
+    <div class="loading-bar"><div id="loading-fill"></div></div>
+    <p id="loading-text">جاري التحميل...</p>
+</div>
+
+<!-- شاشة البداية -->
+<div id="screen-start" class="screen">
+    <div class="logo-3d">🐉</div>
+    <h1>Dragon Dream World 3D</h1>
+    <p class="subtitle">عالم التنانين - نسخة 3D</p>
+    <button class="btn-primary" onclick="Game.showRaceSelect()">ابدأ اللعبة</button>
+    <button class="btn-secondary" onclick="Game.loadGame()">تحميل الحفظ</button>
+</div>
+
+<!-- شاشة اختيار العرق -->
+<div id="screen-race" class="screen">
+    <h2>اختر شخصيتك</h2>
+    <div class="race-grid">
+        <div class="race-card" onclick="Game.selectRace('human')">
+            <div class="race-icon">👤</div>
+            <h3>البشري</h3>
+            <p>متوازن</p>
+            <small>+10% XP</small>
+        </div>
+        <div class="race-card" onclick="Game.selectRace('elf')">
+            <div class="race-icon">🧝</div>
+            <h3>الجان</h3>
+            <p>سريع</p>
+            <small>+20% سرعة</small>
+        </div>
+        <div class="race-card" onclick="Game.selectRace('dwarf')">
+            <div class="race-icon">🧔</div>
+            <h3>القزم</h3>
+            <p>متين</p>
+            <small>+25% دفاع</small>
+        </div>
+        <div class="race-card" onclick="Game.selectRace('orc')">
+            <div class="race-icon">👹</div>
+            <h3>الغول</h3>
+            <p>قوي</p>
+            <small>+30% هجوم</small>
+        </div>
+    </div>
+</div>
+
+<!-- اللعبة 3D -->
+<div id="screen-game" class="screen">
+    <canvas id="game-canvas"></canvas>
+    
+    <!-- HUD -->
+    <div class="hud-top">
+        <div class="hud-left">
+            <div class="player-badge">
+                <span id="hud-race">👤</span>
+                <div>
+                    <div id="hud-name">البطل</div>
+                    <div id="hud-level">مستوى 1 ⭐</div>
+                </div>
+            </div>
+        </div>
+        <div class="hud-right">
+            <span>💰 <span id="hud-gold">100</span></span>
+        </div>
+    </div>
+
+    <div class="hud-bars">
+        <div class="hud-bar">
+            <label>HP</label>
+            <div class="bar-bg"><div id="hud-hp" class="bar-fill hp"></div></div>
+            <span id="hud-hp-text">100/100</span>
+        </div>
+        <div class="hud-bar">
+            <label>MP</label>
+            <div class="bar-bg"><div id="hud-mp" class="bar-fill mp"></div></div>
+            <span id="hud-mp-text">50/50</span>
+        </div>
+        <div class="hud-bar">
+            <label>XP</label>
+            <div class="bar-bg"><div id="hud-xp" class="bar-fill xp"></div></div>
+            <span id="hud-xp-text">0/100</span>
+        </div>
+    </div>
+
+    <!-- معلومات الجزيرة -->
+    <div class="island-hud">
+        <div id="hud-island">🏝️ جزيرة البداية</div>
+        <div id="hud-stars">⭐</div>
+    </div>
+
+    <!-- أزرار التحكم -->
+    <div class="controls">
+        <div class="joystick-area">
+            <div id="joystick" class="joystick">
+                <div id="joystick-knob" class="joystick-knob"></div>
+            </div>
+        </div>
+        <div class="action-buttons">
+            <button class="action-circle" onclick="Game.attack()">⚔️</button>
+            <button class="action-circle skill" onclick="Game.useSkill()">✨</button>
+            <button class="action-circle heal" onclick="Game.useHeal()">💚</button>
+        </div>
+    </div>
+
+    <!-- قائمة جانبية -->
+    <div class="side-menu">
+        <button class="menu-btn" onclick="Game.openPanel('skills')">✨</button>
+        <button class="menu-btn" onclick="Game.openPanel('craft')">🔨</button>
+        <button class="menu-btn" onclick="Game.openPanel('inventory')">🎒</button>
+        <button class="menu-btn" onclick="Game.openPanel('licenses')">📜</button>
+        <button class="menu-btn" onclick="Game.openPanel('market')">🏪</button>
+        <button class="menu-btn" onclick="Game.openPanel('islands')">🏝️</button>
+    </div>
+
+    <!-- سجل القتال -->
+    <div id="combat-log" class="combat-log"></div>
+
+    <!-- معلومات العدو -->
+    <div id="enemy-hud" class="enemy-hud hidden">
+        <div id="enemy-name">وحش</div>
+        <div id="enemy-stars">⭐</div>
+        <div class="bar-bg big"><div id="enemy-hp" class="bar-fill hp"></div></div>
+        <span id="enemy-hp-text">100/100</span>
+    </div>
+</div>
+
+<!-- لوحة منبثقة -->
+<div id="panel" class="panel hidden">
+    <div class="panel-header">
+        <h3 id="panel-title">العنوان</h3>
+        <button class="close-btn" onclick="Game.closePanel()">✕</button>
+    </div>
+    <div id="panel-content" class="panel-content"></div>
+</div>
+
+<!-- إشعار -->
+<div id="toast" class="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="engine3d.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
