@@ -1,3 +1,4 @@
+document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"><\/script>');
 // ============================================
 // 🎨 Dragon Dream World - 3D Engine
 // ============================================
